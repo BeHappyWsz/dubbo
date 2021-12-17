@@ -38,60 +38,63 @@ public class Application {
         RestDemoService restDemoService = context.getBean("restDemoService", RestDemoService.class);
         TripleService tripleService = context.getBean("tripleService", TripleService.class);
 
-        new Thread(() -> {
-            while (true) {
-                try {
-                    String greetings = greetingService.hello();
-                    System.out.println(greetings + " from separated thread.");
-                } catch (Exception e) {
+//        new Thread(() -> {
+//            while (true) {
+//                try {
+//                    String greetings = greetingService.hello();
+//                    System.out.println(greetings + " from separated thread.");
+//                } catch (Exception e) {
+////                    e.printStackTrace();
+//                }
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                }
+//            }
+//        }).start();
+
+//        new Thread(() -> {
+//            while (true) {
+//                try {
+//                    String restResult = restDemoService.sayHello("rest");
+//                    System.out.println(restResult + " from separated thread.");
+//                } catch (Exception e) {
 //                    e.printStackTrace();
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                }
-            }
-        }).start();
+//                }
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                }
+//            }
+//        }).start();
 
-        new Thread(() -> {
-            while (true) {
-                try {
-                    String restResult = restDemoService.sayHello("rest");
-                    System.out.println(restResult + " from separated thread.");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                }
-            }
-        }).start();
-
-        new Thread(() -> {
-            while (true) {
-                try {
-                    String restResult = tripleService.hello();
-                    System.out.println(restResult + " from separated thread.");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                }
-            }
-        }).start();
+//        new Thread(() -> {
+//            while (true) {
+//                try {
+//                    String restResult = tripleService.hello();
+//                    System.out.println(restResult + " from separated thread.");
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                }
+//            }
+//        }).start();
 
         while (true) {
             try {
                 CompletableFuture<String> hello = demoService.sayHelloAsync("world");
-                System.out.println("result: " + hello.get());
+                hello.whenComplete((v, e) -> {
+                    System.out.println("CompletableFuture<String> result: " + v);
+                });
+//                System.out.println("CompletableFuture<String> result: " + hello.get());
 
                 String greetings = greetingService.hello();
                 System.out.println("result: " + greetings);
             } catch (Exception e) {
-//                e.printStackTrace();
+                e.printStackTrace();
             }
 
             Thread.sleep(5000);
